@@ -122,5 +122,4 @@ An example WSDL which is generated looks like:
 ```
 
 # TODO
-- limit SOAP responses to only actions the soap server will respond with
 - This server does not yet work with more than one version of an action.  The latest version will always be used
