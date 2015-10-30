@@ -1,0 +1,25 @@
+{
+  "author": "Evan Tahler <evantahler@gmail.com>",
+  "name": "ah-soap-plugin",
+  "description": "a SOAP server for actionHero",
+  "version": "0.0.1",
+  "homepage": "http://actionherojs.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/evantahler/ah-soap-plugin.git"
+  },
+  "keywords": [
+    "actionhero",
+    "ah",
+    "soap",
+    "xml",
+    "server"
+  ],
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "soap": "^0.10.3",
+    "uuid": "^2.0.1"
+  }
+}
