@@ -3,6 +3,7 @@
   "name": "ah-soap-plugin",
   "description": "a SOAP server for actionHero",
   "version": "0.0.1",
+  "license": "Apache-2.0",
   "homepage": "http://actionherojs.com",
   "repository": {
     "type": "git",
@@ -11,6 +12,7 @@
   "keywords": [
     "actionhero",
     "ah",
+    "plugin",
     "soap",
     "xml",
     "server"
@@ -21,5 +23,13 @@
   "dependencies": {
     "soap": "^0.10.3",
     "uuid": "^2.0.1"
+  },
+  "devDependencies": {
+    "actionhero": "^12.2.0",
+    "mocha": "^2.3.3",
+    "should": "^7.1.1"
+  },
+  "scripts":{
+    "test": "mocha"
   }
 }

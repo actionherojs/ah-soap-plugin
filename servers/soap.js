@@ -1,5 +1,6 @@
 var soap = require("soap");
 var uuid = require("uuid");
+var fs   = require("fs");
 
 var initialize = function(api, options, next){
 
@@ -26,19 +27,27 @@ var initialize = function(api, options, next){
     var self = this;
     var webserver = api.servers.servers.web;
     var soapService = {};
-    // var wsdl = fs.readFileSync(__dirname + '/importSample.wsdl').toString();
+
+    server.releventActionNames = [];
+    for(var actionName in api.actions.actions){
+      // TODO: Support multiple versions of each action
+
+      var latestAction;
+      for(var version in api.actions.actions[actionName]){
+        latestAction = api.actions.actions[actionName][version];
+      }
+
+      if(!latestAction.blockedConnectionTypes || latestAction.blockedConnectionTypes.indexOf('soap') < 0 ){
+        server.releventActionNames.push(actionName);
+      }
+    }
+
     var wsdl = server.buildWsdl();
 
     soapService[api.config.servers.soap.serviceName + 'Service'] = {};
-    soapService[api.config.servers.soap.serviceName + 'Service'][api.config.servers.soap.portName] = {};
+    soapService[api.config.servers.soap.serviceName + 'Service'][api.config.servers.soap.portName] = {};    
 
-    var actionNames = [];
-    for(var actionName in api.actions.actions){
-      // TODO: Support multiple versions of each action
-      actionNames.push(actionName);
-    }
-
-    actionNames.forEach(function(actionName){
+    server.releventActionNames.forEach(function(actionName){
       soapService[api.config.servers.soap.serviceName + 'Service'][api.config.servers.soap.portName][actionName] = function(args, next, headers){
         server.buildConnection({
           rawConnection  : {
@@ -105,7 +114,7 @@ var initialize = function(api, options, next){
     wsdl += '\r\n  <wsdl:types>';
     wsdl += '\r\n    <xsd:schema targetNamespace="' + api.config.servers.soap.publicHost + api.config.servers.soap.path + '.xsd" xmlns:xsd="http://www.w3.org/2000/10/XMLSchema">';
 
-    for(actionName in api.actions.actions){
+    server.releventActionNames.forEach(function(actionName){
       var latestAction;
 
       for(var version in api.actions.actions[actionName]){
@@ -124,7 +133,7 @@ var initialize = function(api, options, next){
         wsdl += '\r\n        </xsd:complexType>';
         wsdl += '\r\n      </xsd:element>';
       }
-    }
+    });
 
     wsdl += '\r\n    </xsd:schema>';
     wsdl += '\r\n  </wsdl:types>';
@@ -132,7 +141,7 @@ var initialize = function(api, options, next){
     // messages
     wsdl += '\r\n';
 
-    for(actionName in api.actions.actions){
+    server.releventActionNames.forEach(function(actionName){
       wsdl += '\r\n  <wsdl:message name="' + actionName + 'Input">';
       wsdl += '\r\n     <wsdl:part name="body" element="xsd1:' + actionName + '"/>';
       wsdl += '\r\n  </wsdl:message>';
@@ -140,18 +149,18 @@ var initialize = function(api, options, next){
       // Note: all responses have the single payload "output"
       wsdl += '\r\n     <wsdl:part name="body" element="xsd1:output"/>';
       wsdl += '\r\n  </wsdl:message>';
-    }
+    });
 
     // operations
     wsdl += '\r\n';
 
     wsdl += '\r\n  <wsdl:portType name="' + api.config.servers.soap.serviceName + 'PortType">';
-    for(actionName in api.actions.actions){
+    server.releventActionNames.forEach(function(actionName){
       wsdl += '\r\n    <wsdl:operation name="' + actionName + '">';
       wsdl += '\r\n      <wsdl:input  message="tns:' + actionName + 'Input"/>';
       wsdl += '\r\n      <wsdl:output message="tns:' + actionName + 'Output"/>';
       wsdl += '\r\n    </wsdl:operation>';
-    }
+    });
     wsdl += '\r\n  </wsdl:portType>';
 
     // binding
@@ -160,13 +169,13 @@ var initialize = function(api, options, next){
     wsdl += '\r\n  <wsdl:binding name="' + api.config.servers.soap.serviceName + 'SoapBinding" type="tns:' + api.config.servers.soap.serviceName + 'PortType">';
     wsdl += '\r\n    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>';
 
-    for(actionName in api.actions.actions){
+    server.releventActionNames.forEach(function(actionName){
       wsdl += '\r\n    <wsdl:operation name="' + actionName + '">';
       wsdl += '\r\n      <soap:operation soapAction="' + api.config.servers.soap.publicHost + '/' + actionName + '"/>';
       wsdl += '\r\n      <wsdl:input> <soap:body use="literal"/></wsdl:input> ';
       wsdl += '\r\n      <wsdl:output><soap:body use="literal"/></wsdl:output>';
       wsdl += '\r\n    </wsdl:operation>';
-    }
+    });
 
     wsdl += '\r\n  </wsdl:binding>';
 
@@ -182,6 +191,10 @@ var initialize = function(api, options, next){
     wsdl += '\r\n</wsdl:definitions>';
 
     api.log(wsdl, 'debug');
+
+    if(api.config.servers.soap.wsdlFile){
+      fs.writeFileSync(api.config.servers.soap.wsdlFile, wsdl);
+    }
 
     return wsdl;
   };

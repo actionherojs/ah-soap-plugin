@@ -7,6 +7,7 @@ exports.default = {
         serviceName: 'actionHero', // do not add 'Service' to the end
         portName: 'actionHeroPort',
         publicHost: 'http://example.com',
+        wsdlFile: process.cwd() + '/actionHeroService.wsdl',
       };
     }
   }
