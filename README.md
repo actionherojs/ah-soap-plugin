@@ -1,5 +1,7 @@
 # ah-soap-plugin
 
+[![Build Status](https://travis-ci.org/evantahler/ah-soap-plugin.svg?branch=master)](https://travis-ci.org/evantahler/ah-soap-plugin)
+
 - I rely on the built-in web server for actionhero.  Be sure that it is enabled.  You use the normal web servers' host/and port options for configuration
 - you wsdl file will be saved and generated at boot to the file defined with `api.config.servers.soap.wsdlFile`
 
