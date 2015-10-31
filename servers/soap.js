@@ -48,7 +48,7 @@ var initialize = function(api, options, next){
     soapService[api.config.servers.soap.serviceName + 'Service'][api.config.servers.soap.portName] = {};    
 
     server.releventActionNames.forEach(function(actionName){
-      soapService[api.config.servers.soap.serviceName + 'Service'][api.config.servers.soap.portName][actionName] = function(args, next, headers){
+      soapService[api.config.servers.soap.serviceName + 'Service'][api.config.servers.soap.portName][actionName] = function(args, next, headers, req){
         server.buildConnection({
           rawConnection  : {
             args: args, 
@@ -56,8 +56,8 @@ var initialize = function(api, options, next){
             actionName: actionName,
             next: next,
           },
-          remoteAddress  : '0.0.0.0', //TODO
-          remotePort     : 0, //TODO
+          remoteAddress  : req.connection.remoteAddress,
+          remotePort     : req.connection.remotePort,
           id             : uuid.v4(),
         });
       };

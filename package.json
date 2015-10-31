@@ -21,7 +21,7 @@
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "soap": "^0.10.3",
+    "soap": "^0.11.0",
     "uuid": "^2.0.1"
   },
   "devDependencies": {
