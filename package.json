@@ -21,13 +21,13 @@
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "soap": "^0.11.0",
-    "uuid": "^2.0.1"
+    "soap": "^0.18.0",
+    "uuid": "^3.0.1"
   },
   "devDependencies": {
-    "actionhero": "^12.2.0",
-    "mocha": "^2.3.3",
-    "should": "^7.1.1"
+    "actionhero": "^16.0.2",
+    "mocha": "^3.2.0",
+    "should": "^11.2.0"
   },
   "scripts":{
     "test": "mocha"
