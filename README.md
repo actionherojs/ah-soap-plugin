@@ -1,5 +1,7 @@
 # ah-soap-plugin
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/actionhero/ah-soap-plugin.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/evantahler/ah-soap-plugin.svg?branch=master)](https://travis-ci.org/evantahler/ah-soap-plugin)
 
 - I rely on the built-in web server for actionhero.  Be sure that it is enabled.  You use the normal web servers' host/and port options for configuration
